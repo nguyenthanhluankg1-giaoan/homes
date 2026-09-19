@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "App user with roles and preferences",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "theme": { "type": "string", "description": "Custom theme preference" }
+      },
+      "required": ["email", "role"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Group for links",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "order": { "type": "number" },
+        "adminSecret": { "type": "string" }
+      },
+      "required": ["name", "order", "adminSecret"]
+    },
+    "Link": {
+      "title": "Link",
+      "description": "Individual application link",
+      "type": "object",
+      "properties": {
+        "categoryId": { "type": "string" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "url": { "type": "string", "format": "uri" },
+        "iconUrl": { "type": "string" },
+        "order": { "type": "number" },
+        "adminSecret": { "type": "string" }
+      },
+      "required": ["categoryId", "title", "url", "order", "adminSecret"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global application settings",
+      "type": "object",
+      "properties": {
+        "adminPassword": { "type": "string", "minLength": 6 }
+      },
+      "required": ["adminPassword"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and roles"
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Link categories"
+    },
+    "/links/{linkId}": {
+      "schema": "Link",
+      "description": "Saved links"
+    },
+    "/settings/{settingId}": {
+      "schema": "Settings",
+      "description": "Global configuration"
+    }
+  }
+}

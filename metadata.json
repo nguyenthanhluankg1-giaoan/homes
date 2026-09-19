@@ -1,0 +1,6 @@
+{
+  "name": "Link Hub",
+  "description": "Trang quản lý liên kết thông minh, tối giản với tính năng kéo thả và tự động nhận diện icon.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

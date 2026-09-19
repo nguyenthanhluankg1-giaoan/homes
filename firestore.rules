@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function getAdminSecret() {
+      return get(/databases/$(database)/documents/settings/admin).data.adminPassword;
+    }
+
+    function isAdminRequest(data) {
+      return data.adminSecret == getAdminSecret();
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Category collection
+    match /categories/{categoryId} {
+      allow get: if true;
+      allow list: if true;
+      
+      allow create: if isAdminRequest(incoming());
+      allow update: if isAdminRequest(incoming());
+      allow delete: if isAdminRequest(existing());
+    }
+
+    // Link collection
+    match /links/{linkId} {
+      allow read: if true;
+      allow list: if true;
+      
+      allow create: if isAdminRequest(incoming());
+      allow update: if isAdminRequest(incoming());
+      allow delete: if isAdminRequest(existing());
+    }
+
+    // Settings collection
+    match /settings/admin {
+      allow get: if true; // Allowed for login check in AuthContext
+      allow create: if !exists(/databases/$(database)/documents/settings/admin);
+      allow update: if isAdminRequest(incoming());
+    }
+  }
+}
